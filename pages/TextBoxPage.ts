@@ -6,6 +6,11 @@ readonly txtEmail;
 readonly txtCurrentAddress;
 readonly txtPermanentAddress;
 readonly btnSubmit;
+readonly lbName;
+readonly lbEmail;
+readonly lbCurrentAddress;
+readonly lbPermanentAddress;
+
 constructor(page: Page) {
     this.page = page;
     this.txtFullName = page.locator("#userName");
@@ -13,7 +18,10 @@ constructor(page: Page) {
     this.txtCurrentAddress = page.locator("#currentAddress");
     this.txtPermanentAddress = page.locator("#permanentAddress");
     this.btnSubmit = page.locator("#submit");
-
+    this.lbName = page.locator("#name");
+    this.lbEmail = page.locator("#email");
+    this.lbCurrentAddress = page.locator("#");
+    this.lbPermanentAddress = page.locator("#permanentAddress");
 }
 async goTo() {
     await this.page.goto("https://demoqa.com/text-box");
@@ -25,6 +33,8 @@ async inputdata(fullName: string, email: string, currentAddress: string, permane
     await this.txtPermanentAddress.fill(permanentAddress);
     await this.btnSubmit.click();
 }
+
+async getTextByLocator() {
 
 
 }
