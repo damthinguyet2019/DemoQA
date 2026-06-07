@@ -35,6 +35,11 @@ async inputdata(fullName: string, email: string, currentAddress: string, permane
 }
 
 async getTextByLocator() {
-
-
+    return {
+        name: await this.lbName.textContent(),
+        email: await this.lbEmail.textContent(),
+        currentAddress: await this.lbCurrentAddress.textContent(),
+        permanentAddress: await this.lbPermanentAddress.textContent()
+    };
+}
 }
