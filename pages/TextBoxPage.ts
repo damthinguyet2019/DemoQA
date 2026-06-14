@@ -20,26 +20,30 @@ constructor(page: Page) {
     this.btnSubmit = page.locator("#submit");
     this.lbName = page.locator("#name");
     this.lbEmail = page.locator("#email");
-    this.lbCurrentAddress = page.locator("#");
-    this.lbPermanentAddress = page.locator("#permanentAddress");
+    this.lbCurrentAddress = page.locator("xpath=//p[@id='currentAddress']");
+    this.lbPermanentAddress = page.locator("xpath=//p[@id='permanentAddress']");
+   
 }
 async goTo() {
-    await this.page.goto("https://demoqa.com/text-box");
+    await this.page.goto("/text-box");
 }
-async inputdata(fullName: string, email: string, currentAddress: string, permanentAddress: string) {
+async inputData(fullName: string, email: string, currentAddress: string, permanentAddress: string) {
     await this.txtFullName.fill(fullName);
     await this.txtEmail.fill(email);
     await this.txtCurrentAddress.fill(currentAddress);
     await this.txtPermanentAddress.fill(permanentAddress);
     await this.btnSubmit.click();
 }
-
-async getTextByLocator() {
-    return {
-        name: await this.lbName.textContent(),
-        email: await this.lbEmail.textContent(),
-        currentAddress: await this.lbCurrentAddress.textContent(),
-        permanentAddress: await this.lbPermanentAddress.textContent()
-    };
+async getTextByLocator(locator:any): Promise<string> {
+    const originalText = await locator.textContent();
+    const index: number = originalText?.indexOf(":");
+    return originalText.substring(index + 1, originalText.length).trim();
 }
+async getCssValue(locator:any): Promise<string> {
+    return await locator.getCssValue("color");
+  
+}
+async getAtributeName(locator:any, attributeName: string): Promise<string> {
+    return await locator.getAttribute(attributeName);
+}   
 }
