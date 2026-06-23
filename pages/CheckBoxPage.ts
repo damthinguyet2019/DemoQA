@@ -1,30 +1,38 @@
-import { Locator, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export class CheckBoxPage {
-    readonly page: Page;
-    readonly expandAllButton: Locator;
-    readonly collapseAllButton: Locator;
-    readonly checkBoxHome: Locator;
-    readonly checkBoxListDesktop: Locator;
-    readonly checkBoxListDocuments: Locator;
-    readonly checkBoxListDownloads: Locator;
+    readonly iconExpandHome;
+  readonly chkHome;
+  readonly chkDesktop;
+  readonly chkDocuments;
+  readonly chkDownloads;
+  readonly lblResult;
 
-    constructor(page: Page) {
-        this.page = page;
-        this.expandAllButton = page.getByRole('button', { name: /expand all/i });
-        this.collapseAllButton = page.getByRole('button', { name: /collapse all/i });
-        this.checkBoxHome = page.locator('input#tree-node-home');
-        this.checkBoxListDesktop = page.locator('label[for="tree-node-0"]');
-        this.checkBoxListDocuments = page.locator('label[for="tree-node-1"]');
-        this.checkBoxListDownloads = page.locator('label[for="tree-node-2"]');
+       constructor(public readonly page: Page) {
+            this.iconExpandHome=page.locator('xpath=//span[text()="Home"]/../preceding-sibling::span[@role="checkbox"]/preceding-sibling::span[1]');
+       this.chkHome=page.locator('xpath=//span[text()="Home"]/../preceding-sibling::span[@role="checkbox"]');
+       this.chkDesktop=page.locator('xpath=//span[text()="Desktop"]/../preceding-sibling::span[@role="checkbox"]');
+         this.chkDocuments=page.locator('xpath=//span[text()="Documents"]/../preceding-sibling::span[@role="checkbox"]');
+         this.chkDownloads=page.locator('xpath=//span[text()="Downloads"]/../preceding-sibling::span[@role="checkbox"]');
+         this.lblResult=page.locator('xpath=//div[@id="result"]/span');
+
     }
 async goTo() {
-    await this.page.goto("/checkbox");
+    await this.page.goto('/checkbox');
 }
 async clickExpandAllButton() {
-    await this.expandAllButton.click();
+    await this.iconExpandHome.click();
 }
-async clickCollapseAllButton() {
-    await this.collapseAllButton.click();
+
+async clickHomeCheckBox() {
+    await this.chkHome.click();
+}
+async getResultText(): Promise<string> {
+    let result: string = '';
+    const count = await this.lblResult.count();
+    for (let i = 0; i < count; i++) {
+        result =result + (await this.lblResult.nth(i).textContent() +' ');
+    }
+    return result;
 }
 }

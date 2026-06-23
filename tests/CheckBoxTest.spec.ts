@@ -1,5 +1,6 @@
-import {test, expect} from 'playwright/test';
-import { CheckBoxPage } from '../pages/CheckBoxPage.js';
+import { test, expect, type Page } from '@playwright/test';
+import { CheckBoxPage } from '../pages/CheckBoxPage';
+
 
 test.describe("Check Box Test", () => {
     let checkBoxPage: CheckBoxPage;
@@ -9,22 +10,21 @@ test.describe("Check Box Test", () => {
         await checkBoxPage.goTo();   
     });
 
-    test("TC01-Click Expand All button", async ({ page }) => {
+
+
+    test("TC01-Click Expand All button", async () => {
+        await checkBoxPage.chkHome.waitFor({state:'visible'});
+        await expect(checkBoxPage.chkHome).not.toBeChecked();
+        await checkBoxPage.clickHomeCheckBox();
         await checkBoxPage.clickExpandAllButton();
-        await expect(page.getByText('Desktop', { exact: true })).toBeVisible();
+        await expect(checkBoxPage.chkHome).toBeChecked();
+        await expect(checkBoxPage.chkDesktop).toBeChecked();
+        await expect(checkBoxPage.chkDocuments).toBeChecked();
+        await expect(checkBoxPage.chkDownloads).toBeChecked();
+        const actualResult:string = await checkBoxPage.getResultText();
+        const expectedResult:string = 'You have selected : home desktop documents downloads notes commands workspace office wordFile excelFile react angular veu public private classified general';
+        expect(actualResult.trim()).toBe(expectedResult);
     });
 
-    test("TC02-Click Collapse All button", async ({ page }) => {
-        await checkBoxPage.clickExpandAllButton();
-        await expect(page.getByText('Desktop', { exact: true })).toBeVisible();
-
-        await checkBoxPage.clickCollapseAllButton();
-
-        await expect(page.getByText('Desktop', { exact: true })).toBeHidden();
-    });
-
-    test("TC03-Click on checkbox", async () => {
-        await checkBoxPage.checkBoxHome.check();
-        await expect(checkBoxPage.checkBoxHome).toBeChecked();
-    });
+    
 });
