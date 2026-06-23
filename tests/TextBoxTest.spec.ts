@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
-import { TextBoxPage  } from '../pages/TextBoxPage.js';
+import { test, expect }  from '@playwright/test';
+import { TextBoxPage } from '../pages/TextBoxPage.js';
 
 test.describe("Text Box Test", () => {
     let textBoxPage: TextBoxPage;
 
-    test.beforeEach(async ({ page }) => {
-        textBoxPage = new TextBoxPage(page);
+  test.beforeEach(async ({ page }) => {
+    textBoxPage = new TextBoxPage(page);
         await textBoxPage.goTo();   
     });    
 
