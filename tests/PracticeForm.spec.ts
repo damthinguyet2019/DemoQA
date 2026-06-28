@@ -59,6 +59,7 @@ const actualGender: string = await thanksForSubmittingPage.getValueByLabel(thank
     const firstSpace = dateOfBirth.indexOf("");
     const secondSpace = dateOfBirth.indexOf("", firstSpace+1);
     //const expectedDateOfBirth:string = dateOfBirth.replace(dateOfBirth.get.secondSpace,',')
+    // day9
 
     expect (actualDateOfBirth).toBe(dateOfBirth) // truyen thang bien da nhap tu ben tren 
 
