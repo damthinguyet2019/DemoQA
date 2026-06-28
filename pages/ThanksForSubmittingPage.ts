@@ -1,12 +1,12 @@
 import type { Page,Locator } from "@playwright/test";
 
 export class ThanksForSubmittingPage {
-   
-    readonly lblThanksForSubmitting;
-    readonly lblValue='xpath=//*[text()="@param"]/../following-sibling::td';
-
+       readonly lblThanksForSubmitting;
+         lblValue : string= '//*[text()="@param"]/follwing-sibling::td';
+    
     constructor(public readonly page: Page) {
         this.lblThanksForSubmitting = page.locator('xpath=//div[@id="example-modal-sizes-title-lg"]');
+
         }
 
         async getValueByLabel(originalXpath: string, label: string): Promise<string> {
