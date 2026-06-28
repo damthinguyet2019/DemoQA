@@ -4,39 +4,32 @@ export class PracticeFormPage {
   readonly txtFirstName;
   readonly txtLastName;
   readonly txtEmail;
-  rdGender:string='//*[text()="@param"]';
-
-  readonly rdoMale;
-  readonly rdoFemale;
+  rdGender:string='xpath=//*[text()="@param"]';
   readonly rdoOther;
-  //readonly txtMobile;
-  readonly DateOfBirth;
+  readonly txtMobile;
+  readonly txtDateOfBirth;
   readonly txtSubjects;
-  readonly chkSports;
-  readonly chkReading;
-  readonly chkMusic;
-  readonly fileUpload;
+  //khai báo để truyền nhập động, khong can khai bao trong contructor nua
+  chkHobbies:string='//label[text()="@param"]';
+  readonly txtPicture;
   readonly txtCurrentAddress;
-  readonly lblState;
-  readonly lblCity;
+  readonly cbState;
+  readonly cbCity;
   readonly btnSubmit;
 
   constructor(public readonly page: Page) {
     this.txtFirstName = page.locator("#firstName");
     this.txtLastName = page.locator("#lastName");
     this.txtEmail = page.locator("#userEmail");
-    this.rdoMale = page.locator("#gender-radio-1");
-    this.rdoFemale = page.locator("#gender-radio-2");
+    this.txtMobile = page.locator("#userNumber")
     this.rdoOther = page.locator("#gender-radio-3");
-    this.DateOfBirth = page.locator("#dateOfBirthInput");
+    this.txtDateOfBirth = page.locator("#dateOfBirthInput");
     this.txtSubjects = page.locator("#subjectsInput");
-    this.chkSports = page.locator("#hobbies-checkbox-1");
-    this.chkReading = page.locator("#hobbies-checkbox-2");
-    this.chkMusic = page.locator("#hobbies-checkbox-3");
-    this.fileUpload = page.locator("#uploadPicture");
+    this.txtPicture = page.locator("#uploadPicture");
     this.txtCurrentAddress = page.locator("#currentAddress");
-    this.lblState = page.locator("#state");
-    this.lblCity = page.locator("#city");
+    this.cbState = page.locator('xpath= //*[@id="state"]//input');
+    this.cbCity = page.locator('xpath= //*[@id="city"]//input');
+    
     this.btnSubmit = page.locator("#submit");
   }
 
@@ -48,40 +41,86 @@ export class PracticeFormPage {
     firstName: string,
     lastName: string,
     email: string,
-    currentAddress: string
-  ) {
+    currentAddress: string,
+    gender: string,
+    mobile: string,
+    dateOfBirth: string,
+    picture:string,
+    subject:string,
+    hobbies:string,
+    state:string,
+    city:string,
+     ) 
+     {  
     await this.txtFirstName.fill(firstName);
     await this.txtLastName.fill(lastName);
     await this.txtEmail.fill(email);
-    await this.page.click(this.rdGender.replace('@param', 'Male'));
+    await this.page.click(this.rdGender.replace('@param', gender));
+    await this.txtMobile.fill(mobile);
+    await this.inputDateOfBirth(dateOfBirth);
+    await this.inputSubjects(subject);  // gọi hàm nhập từ async bên dưới
+    await this.inputDateOfBirth(dateOfBirth);
+    await this.inputHobbies(hobbies);
+    //truyền đường dẫn thư mục dự án để lấy tên file ảnh truyền vào
+  const picturePath = process.cwd()+'/testcase/data/' + picture; // thu muc chua data du an
+ await this.txtPicture.fill(picturePath);
     await this.txtCurrentAddress.fill(currentAddress);
-    await this.btnSubmit.click();
-  }
-  async submit(){
+    await this.cbState.fill(state);
+    await this.cbState.press('Enter')
+ await this.cbCity.fill(city);
+        await this.cbCity.press('Enter')
+
     await this.btnSubmit.click();
   }
 
-   async getLocatorByText(originalXpath: string, text: string): Promise<Locator > {
+    async submit() {
+      await this.btnSubmit.click();
+    }
+
+    // lay value gender theo value chon, kieu radio button
+async getLocatorByText(originalXpath: string, text: string): Promise<Locator> {
             const newXpath = originalXpath.replace('@param', text);
-            const result: string = await this.page.locator(newXpath).textContent()||'';
-            return this.page.locator(newXpath)
-                       ;
+           return this.page.locator(newXpath);
         }
+   
+// ham lay date time
+  async inputDateOfBirth(dateOfBirth: string) {
+        let dateOfBirths = dateOfBirth.split(' '); // cat chuoi thanh mang de lay ra cac phan tu
+        const day = dateOfBirths[0];
+        const month = dateOfBirths[1];
+        const year  = dateOfBirths[2];  
+        await this.txtDateOfBirth.click();
 
-    async inputDateOfBirth(dateOfBirth: string) {
-        let dateOfBirths=dateOfBirth.split('');
-        const day = dateOfBirths[0]+dateOfBirths[1];
-        const month = dateOfBirths[3]+dateOfBirths[4];
-        const year = dateOfBirths[6]+dateOfBirths[7]+dateOfBirths[8]+dateOfBirths[9];
+        if (!day || !month || !year) {
+            throw new Error(`Invalid dateOfBirth value: ${dateOfBirth}`);
+        }
+        
+        await this.page.locator('.react-datepicker__year-select').selectOption(year);
+        await this.page.locator('.react-datepicker__month-select').selectOption(month);
+        await this.page.locator(`.react-datepicker__day--0${day}`).click();
+    }
+    // hàm nhập lấy data từ combobox, input sau click
+    async inputSubjects(subjects: string) {
+        const subjectList = subjects.split(',').map(subject => subject.trim());
+        for (const subject of subjectList) {
+            await this.txtSubjects.fill(subject);
+            await this.page.keyboard.press('Enter');
+        }
+    }
 
-        await this.DateOfBirth.click();
-            await this.page.locator(`xpath=//div[@class="react-datepicker__month-select"]/option[@value="${parseInt(month)-1}"]`).click();
-            await this.page.locator(`xpath=//div[@class="react-datepicker__year-select"]/option[@value="${year}"]`).click();
-            await this.page.locator(`xpath=//div[contains(@class,"react-datepicker__day") and not(contains(@class,"react-datepicker__day--outside-month")) and text()="${parseInt(day)}"]`).click();
-            
-        await this.DateOfBirth.fill(dateOfBirth);
-        await this.DateOfBirth.press('Enter');
-    }   
+    //hàm lấy data từ checkbox, tick chọn  
+    async inputHobbies(hobbies: string) {
+        const hobbyList = hobbies.split(',').map(hobby => hobby.trim());  
+        for (const hobby of hobbyList) {
+            await this.page.click(this.chkHobbies.replace('@param',hobby));
+        } 
+      }
+
+
 }
+
+
+
+
 
 
