@@ -5,12 +5,16 @@ export class PracticeFormPage {
   readonly txtLastName;
   readonly txtEmail;
   rdGender:string='xpath=//*[text()="@param"]';
-  readonly rdoOther;
+  
   readonly txtMobile;
   readonly txtDateOfBirth;
+  readonly ddlYear;
+  readonly ddlMonth;
+  lbDate:string = 'xpath = //dev[text() = "@param"]';
+
   readonly txtSubjects;
   //khai báo để truyền nhập động, khong can khai bao trong contructor nua
-  chkHobbies:string='//label[text()="@param"]';
+  chkHobbies:string='xpath =//label[text()="@param"]';
   readonly txtPicture;
   readonly txtCurrentAddress;
   readonly cbState;
@@ -22,8 +26,10 @@ export class PracticeFormPage {
     this.txtLastName = page.locator("#lastName");
     this.txtEmail = page.locator("#userEmail");
     this.txtMobile = page.locator("#userNumber")
-    this.rdoOther = page.locator("#gender-radio-3");
     this.txtDateOfBirth = page.locator("#dateOfBirthInput");
+    this.ddlYear = page.locator('xpath= //select[@class="react-datepicker__year-select"]');
+    this.ddlMonth = page.locator('xpath=//select[@class="react-datepicker__month-select"]');
+        //this.lblDate = page.locator('xpath = //*[@role="rowgroup"]/div[1]/div[text()="15"]')
     this.txtSubjects = page.locator("#subjectsInput");
     this.txtPicture = page.locator("#uploadPicture");
     this.txtCurrentAddress = page.locator("#currentAddress");
@@ -41,12 +47,16 @@ export class PracticeFormPage {
     firstName: string,
     lastName: string,
     email: string,
-    currentAddress: string,
     gender: string,
-    mobile: string,
-    dateOfBirth: string,
+      mobile: string,
+         dateOfBirth: string,
+          subject:string,
+    currentAddress: string,
+    
+  
+ 
     picture:string,
-    subject:string,
+   
     hobbies:string,
     state:string,
     city:string,
@@ -63,7 +73,7 @@ export class PracticeFormPage {
     await this.inputHobbies(hobbies);
     //truyền đường dẫn thư mục dự án để lấy tên file ảnh truyền vào
   const picturePath = process.cwd()+'/testcase/data/' + picture; // thu muc chua data du an
- await this.txtPicture.fill(picturePath);
+ //await this.txtPicture.fill(picturePath);
     await this.txtCurrentAddress.fill(currentAddress);
     await this.cbState.fill(state);
     await this.cbState.press('Enter')
@@ -86,14 +96,17 @@ async getLocatorByText(originalXpath: string, text: string): Promise<Locator> {
 // ham lay date time
   async inputDateOfBirth(dateOfBirth: string) {
         let dateOfBirths = dateOfBirth.split(' '); // cat chuoi thanh mang de lay ra cac phan tu
-        const day = dateOfBirths[0];
-        const month = dateOfBirths[1];
-        const year  = dateOfBirths[2];  
+        const day = dateOfBirths[0]|| "";
+        const month = dateOfBirths[1]|| "";
+        const year  = dateOfBirths[2]|| "";  
         await this.txtDateOfBirth.click();
+        await this.ddlYear.selectOption(year);
+        await this.ddlMonth.selectOption(month);
+        //await this.lblDate.selectOption(Date);
 
-        if (!day || !month || !year) {
-            throw new Error(`Invalid dateOfBirth value: ${dateOfBirth}`);
-        }
+        // if (!day || !month || !year) {
+        //     throw new Error(`Invalid dateOfBirth value: ${dateOfBirth}`);
+        // }
         
         await this.page.locator('.react-datepicker__year-select').selectOption(year);
         await this.page.locator('.react-datepicker__month-select').selectOption(month);

@@ -1,0 +1,16 @@
+firstName,
+    lastName,
+    email,
+    gender,
+      mobile,
+         dateOfBirth,
+          subject,
+    currentAddress,
+    
+  
+ 
+    picture,
+   
+    hobbies,
+    state,
+    city,
