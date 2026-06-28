@@ -89,10 +89,18 @@ test.describe("Practice Form Test", () => {
       );
     const firstSpace = dateOfBirth.indexOf(" ");
     const secondSpace = dateOfBirth.indexOf(" ", firstSpace + 1);
-    const expectedDateOfBirth: string = dateOfBirth.replace(dateOfBirth[secondSpace],",",); // thay dau phay o vi tri thu 2 thanh dau ,
+    //const expectedDateOfBirth: string = dateOfBirth.replace(dateOfBirth[secondSpace],",",); // thay dau phay o vi tri thu 2 thanh dau ,
     //day10
+    const expectedDateOfBirths: string[] = dateOfBirth.split(" ");
+    const expectedDateOfBirth: string =
+      expectedDateOfBirths[0] +
+      " " +
+      expectedDateOfBirths[1] +
+      "," +
+      expectedDateOfBirths[2];
+    expect(actualDateOfBirth).toBe(expectedDateOfBirth);
 
-    expect(actualDateOfBirth).toBe(dateOfBirth); // truyen thang bien da nhap tu ben tren
+    //expect(actualDateOfBirth).toBe(dateOfBirth); // truyen thang bien da nhap tu ben tren
 
     const actualSubjects: string =
       await thanksForSubmittingPage.getValueByLabel(
