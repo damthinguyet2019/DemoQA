@@ -25,9 +25,16 @@ test.describe('Practice Form Test', () => {
   //truyền ten anh vao  
   const picture: string = `test.jpg`;  // truyen ten anh 
 
+  const dateOfBirth: string = '01 Jan 1980';
+  const subjects: string = 'Maths, Physics';
+  const hobbies: string = 'Sports, Reading';
+  const projectRoot = process.cwd()+'/testcase/data';
+  const picture: string = `test.jpg`;
   const currentAddress: string = '123 Main St';     
   const state: string = 'NCR';
   const city: string = 'Delhi';
+  //await practiceFormPage.inputData(firstName, lastName, email, currentAddress, gender, mobile, dateOfBirth, subjects, hobbies);
+  const actualFirstName: string = await thanksForSubmittingPage.getValueByLabel(thanksForSubmittingPage.lblValue, 'Student Name');
 
   //const picturePath: string = `${projectRoot}/${picture}`;
 

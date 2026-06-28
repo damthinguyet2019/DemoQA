@@ -26,6 +26,7 @@ export class PracticeFormPage {
     this.txtDateOfBirth = page.locator("#dateOfBirthInput");
     this.txtSubjects = page.locator("#subjectsInput");
     this.txtPicture = page.locator("#uploadPicture");
+    //this.btnChooseFile = page.locator("#uploadPicture");
     this.txtCurrentAddress = page.locator("#currentAddress");
     this.cbState = page.locator('xpath= //*[@id="state"]//input');
     this.cbCity = page.locator('xpath= //*[@id="city"]//input');
@@ -70,6 +71,12 @@ export class PracticeFormPage {
  await this.cbCity.fill(city);
         await this.cbCity.press('Enter')
 
+    await this.txtSubjects.fill(subject);
+    
+    await this.inputDateOfBirth(dateOfBirth);
+    
+    await this.txtCurrentAddress.fill(currentAddress);
+        
     await this.btnSubmit.click();
   }
 
@@ -117,6 +124,37 @@ async getLocatorByText(originalXpath: string, text: string): Promise<Locator> {
       }
 
 
+        }
+   
+// ham lay date time
+  async inputDateOfBirth(dateOfBirth: string) {
+        let dateOfBirths = dateOfBirth.split(' '); // cat chuoi thanh mang de lay ra cac phan tu
+        const day = dateOfBirths[0];
+        const month = dateOfBirths[1];
+        const year  = dateOfBirths[2];  
+        await this.txtDateOfBirth.click();
+
+        if (!day || !month || !year) {
+            throw new Error(`Invalid dateOfBirth value: ${dateOfBirth}`);
+        }
+        
+        await this.page.locator('.react-datepicker__year-select').selectOption(year);
+        await this.page.locator('.react-datepicker__month-select').selectOption(month);
+        await this.page.locator(`.react-datepicker__day--0${day}`).click();
+    }
+    async inputSubjects(subjects: string) {
+        const subjectList = subjects.split(',').map(subject => subject.trim());
+        for (const subject of subjectList) {
+            await this.txtSubjects.fill(subject);
+            await this.page.keyboard.press('Enter');
+        }
+    }
+    // async inputHobbies(hobbies: string) {
+    //     const hobbyList = hobbies.split(',').map(hobby => hobby.trim());  
+    //     for (const hobby of hobbyList) {
+    //         await 
+    //     } 
+    //   }
 }
 
 
