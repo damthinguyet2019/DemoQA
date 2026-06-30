@@ -18,12 +18,12 @@ test.describe("Practice Form Test", () => {
     const email: string = "john.doe@example.com";
     const gender: string = "Male";
     const mobile: string = "1234567890";
-    const dateOfBirth: string = "01 January 1980";
+    const dateOfBirth: string = "15 January 1980";
     const subjects: string = "Maths, Physics";
     const hobbies: string = "Sports, Reading";
 
     //truyền ten anh vao
-    const picture: string = `test.jpg`; // truyen ten anh
+    const picture: string = `test.png`; // truyen ten anh
 
     const currentAddress: string = "123 Main St";
     const state: string = "NCR";
@@ -53,14 +53,14 @@ test.describe("Practice Form Test", () => {
         thanksForSubmittingPage.lblValue,
         "Student Name",
       );
-    const expectedStudentName: string = firstName + "" + lastName;
+    const expectedStudentName: string = firstName + " " + lastName;
     expect(actualStudentName).toBe(expectedStudentName);
 
     // khi nhap thi nhap email , expect = email
     const actualStudentEmail: string =
       await thanksForSubmittingPage.getValueByLabel(
         thanksForSubmittingPage.lblValue,
-        "Email",
+        "Student Email",
       );
     // const expectedStudentEmail:string = email;  // email khong bien doi gi , no bang chinh gia tri email truyen o ben tren
     expect(actualStudentEmail).toBe(email); // truyen thang bien email nhap tu ben tren
@@ -87,8 +87,8 @@ test.describe("Practice Form Test", () => {
         thanksForSubmittingPage.lblValue,
         "Date of Birth",
       );
-    const firstSpace = dateOfBirth.indexOf(" ");
-    const secondSpace = dateOfBirth.indexOf(" ", firstSpace + 1);
+    //const firstSpace = dateOfBirth.indexOf(" ");
+   // const secondSpace = dateOfBirth.indexOf(" ", firstSpace + 1);
     //const expectedDateOfBirth: string = dateOfBirth.replace(dateOfBirth[secondSpace],",",); // thay dau phay o vi tri thu 2 thanh dau ,
     //day10
     const expectedDateOfBirths: string[] = dateOfBirth.split(" ");
@@ -122,7 +122,7 @@ test.describe("Practice Form Test", () => {
 
     const actualAdress: string = await thanksForSubmittingPage.getValueByLabel(
       thanksForSubmittingPage.lblValue,
-      "Current Adress"
+      "Address"
     );
     expect(actualAdress).toBe(currentAddress); // truyen thang bien da nhap tu ben tren
 
