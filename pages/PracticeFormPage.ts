@@ -1,33 +1,40 @@
 import type { Locator, Page } from "@playwright/test";
+import path from "path";
 
 export class PracticeFormPage {
   readonly txtFirstName;
   readonly txtLastName;
   readonly txtEmail;
-  rdGender:string='xpath=//*[text()="@param"]';
-  readonly rdoOther;
-  readonly txtMobile;
+  rdGenderAndHobies:string='xpath=//label[text()="@param"]//preceding-sibling::input';
+    readonly txtMobile;
   readonly txtDateOfBirth;
+  readonly ddlYear;
+  readonly ddlMonth;
+  lblDate: string = 'xpath=//div[text()="@param"]'; // truyen dong theo ngay vao, lay theo text cua ngay do
   readonly txtSubjects;
   //khai báo để truyền nhập động, khong can khai bao trong contructor nua
-  chkHobbies:string='xpath=//label[text()="@param"]';
+  //chkHobbies:string='xpath=//label[text()="@param"]';
   readonly txtPicture;
-  lblDate: string = 'xpath=//div[text()="@param"]';
-  readonly txtCurrentAddress;
+ //lblDate: string = 'xpath=//*[@role="rowgroup"]/div[1]/div[text()="@param"]'; // truyen dong theo ngay vao, lay theo text cua ngay do
+ 
+ readonly txtCurrentAddress;
   readonly cbState;
   readonly cbCity;
   readonly btnSubmit;
-  readonly ddlYear;
-  readonly ddlMonth;
-  //readonly lblDate;
+  
 
   constructor(public readonly page: Page) {
     this.txtFirstName = page.locator("#firstName");
     this.txtLastName = page.locator("#lastName");
     this.txtEmail = page.locator("#userEmail");
+
     this.txtMobile = page.locator("#userNumber")
-    this.rdoOther = page.locator("#gender-radio-3");
+    
     this.txtDateOfBirth = page.locator("#dateOfBirthInput");
+    this.txtDateOfBirth = page.locator("#dateOfBirthInput");
+    this.ddlYear = page.locator(".react-datepicker__year-select");
+    this.ddlMonth = page.locator(".react-datepicker__month-select");
+    
     this.txtSubjects = page.locator("#subjectsInput");
     this.txtPicture = page.locator("#uploadPicture");
     this.txtCurrentAddress = page.locator("#currentAddress");
@@ -45,14 +52,16 @@ export class PracticeFormPage {
     firstName: string,
     lastName: string,
     email: string,
-    currentAddress: string,
-    gender: string,
+       gender: string,
+
     mobile: string,
     dateOfBirth: string,
-    picture:string,
-    subject:string,
-    hobbies:string,
-    state:string,
+     subject:string,
+
+   hobbies:string,
+     picture:string,
+     currentAddress: string,
+        state:string,
     city:string,
 
      ) 
@@ -60,20 +69,20 @@ export class PracticeFormPage {
     await this.txtFirstName.fill(firstName);
     await this.txtLastName.fill(lastName);
     await this.txtEmail.fill(email);
-    await this.page.click(this.rdGender.replace('@param', gender));
+    await this.page.click(this.rdGenderAndHobies.replace('@param', gender));
     await this.txtMobile.fill(mobile);
     await this.inputDateOfBirth(dateOfBirth);
     await this.inputSubjects(subject);  // gọi hàm nhập từ async bên dưới
-    await this.inputDateOfBirth(dateOfBirth);
     await this.inputHobbies(hobbies);
     //truyền đường dẫn thư mục dự án để lấy tên file ảnh truyền vào
-  const picturePath = process.cwd()+'/testcase/data/' + picture; // thu muc chua data du an
- await this.txtPicture.setInputFiles(picturePath)
+    const picturePath:string = process.cwd() + '/testcase/data/' + picture;
+    await this.txtPicture.setInputFiles(picturePath);
+ 
     await this.txtCurrentAddress.fill(currentAddress);
     await this.cbState.fill(state);
-    await this.cbState.press('Enter')
+    await this.cbState.press('Enter');
  await this.cbCity.fill(city);
-        await this.cbCity.press('Enter')
+        await this.cbCity.press('Enter');
 
     await this.btnSubmit.click();
   }
@@ -91,18 +100,13 @@ async getLocatorByText(originalXpath: string, text: string): Promise<Locator> {
 // ham lay date time
 async inputDateOfBirth(dateOfBirth: string) {
         let dateOfBirths = dateOfBirth.split(' '); // cat chuoi thanh mang de lay ra cac phan tu
-        const day = dateOfBirths[0]|| "";
-        const month = dateOfBirths[1]|| "";
-        const year  = dateOfBirths[2]|| "";  
-        await this.txtDateOfBirth.click();
-      await this.txtDateOfBirth.click();
+        const day: string = dateOfBirths[0] || "";
+    const month: string = dateOfBirths[1] || "";
+    const year: string = dateOfBirths[2] || "";
+    await this.txtDateOfBirth.click();
     await this.ddlYear.selectOption(year);
     await this.ddlMonth.selectOption(month);
-    await this.page.click(this.lblDate.replace("@param", day));
-
-         await this.page.locator('.react-datepicker__year-select').selectOption(year);
-        await this.page.locator('.react-datepicker__month-select').selectOption(month);
-        await this.page.locator(`.react-datepicker__day--0${day}`).click();
+    await this.page.click(this.lblDate.replace("@param", day)); // click vao ngay truyen vao, lay theo text cua ngay do
     // hàm nhập lấy data từ combobox, input sau click
 }
 
@@ -114,13 +118,13 @@ async inputDateOfBirth(dateOfBirth: string) {
         }
     }
 
-    //hàm lấy data từ checkbox, tick chọn  
+    //hàm lấy data từ checkbox, tick chọn
     async inputHobbies(hobbies: string) {
-        const hobbyList = hobbies.split(',').map(hobby => hobby.trim());  
+        const hobbyList = hobbies.split(',').map(hobby => hobby.trim());
         for (const hobby of hobbyList) {
-            await this.page.click(this.chkHobbies.replace('@param',hobby));
-        } 
-      }
+            await this.page.click(this.rdGenderAndHobies.replace('@param', hobby));
+        }
+    }
 
 
 }
