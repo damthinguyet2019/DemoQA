@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.associations": {
     "*.spec.ts": "ignore"
   },
