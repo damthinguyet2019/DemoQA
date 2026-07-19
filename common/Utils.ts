@@ -1,15 +1,23 @@
-import * as fs from 'fs';
-import * as path from 'path';
-function readDataFromCSV(filePath: string){
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const [headerLine, ...lines] = content.trim().split('\n');
-    const headers = headerLine.split(',');
-    return lines.map(line => {
-    const values = line.split(',');
-    return headers.reduce((obj, header, index) => {
-        obj[header.trim()] = values[index].trim();
-        return obj;
-    }, {} as Record<string, string>);   
-}   
-);
+import * as fs from "fs";
+import { parse } from "csv-parse/sync";
+
+export function readDataFromCSV(filePath: string): Record<string, string>[] {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`CSV file not found: ${filePath}`);
+  }
+
+  const content = fs.readFileSync(filePath, "utf8");
+
+  const parsedRows = parse(content, {
+    columns: true, // Dòng đầu tiên là header
+    skip_empty_lines: true, // Bỏ qua dòng trống
+    trim: true, // Xóa khoảng trắng đầu/cuối
+  }) as Array<Record<string, string | undefined>>;
+
+  return parsedRows.map(
+    (row) =>
+      Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [key, value ?? ""]),
+      ) as Record<string, string>,
+  );
 }

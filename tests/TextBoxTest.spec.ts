@@ -1,39 +1,53 @@
-import { test, expect }  from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { TextBoxPage } from '../pages/TextBoxPage.js';
+test.describe('TextBox Tests', () => {
+let textBoxPage:TextBoxPage;
 
-test.describe("Text Box Test", () => {
-    let textBoxPage: TextBoxPage;
-
-  test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }) => {
     textBoxPage = new TextBoxPage(page);
-        await textBoxPage.goTo();   
-    });    
+    await textBoxPage.goTo();
+}); 
 
-    test("submit successfully", async () => {
-        const fullName: string = "John Doe";
-        const email: string = "john.doe@example.com";
-        const currentAddress: string = "123 Main St";
-        const permanentAddress: string = "456 Oak Ave";
-        await textBoxPage.inputData(fullName, email, currentAddress, permanentAddress);
-        const actualFullName: string = await textBoxPage.getTextByLocator(textBoxPage.lbName);
-        const actualEmail: string = await textBoxPage.getTextByLocator(textBoxPage.lbEmail);
-        const actualCurrentAddress: string = await textBoxPage.getTextByLocator(textBoxPage.lbCurrentAddress);
-        const actualPermanentAddress: string = await textBoxPage.getTextByLocator(textBoxPage.lbPermanentAddress);
+//TC01: Verify that the user can submit the form successfully with valid data
+test('Submit Successfully', async () => {
+  const fullName: string = 'Thu Hà';
+  const email: string = 'thuha@gmail.com';
+  const currentAddress: string = '123 Main St';
+  const permanentAddress: string = '456 Elm St';
+    await textBoxPage.inputData(fullName, email, currentAddress, permanentAddress);
+    const actualNameText: string = await textBoxPage.getTextByLocator(textBoxPage.lbName);
+    const actualEmailText: string = await textBoxPage.getTextByLocator(textBoxPage.lbEmail);
+    const actualCurrentAddressText: string = await textBoxPage.getTextByLocator(textBoxPage.lbCurrentAddress);
+    const actualPermanentAddressText: string = await textBoxPage.getTextByLocator(textBoxPage.lbPermanentAddress);
+    await expect(actualNameText).toBe(fullName);
+    await expect(actualEmailText).toBe(email);
+    await expect(actualCurrentAddressText).toBe(currentAddress);
+    await expect(actualPermanentAddressText).toBe(permanentAddress);
+    
+  });
 
-        await expect(actualFullName).toBe(fullName);
-        await expect(actualEmail).toBe(email);
-        await expect(actualCurrentAddress).toBe(currentAddress);
-        await expect(actualPermanentAddress).toBe(permanentAddress);
-        //Add assertions here to verify the form submission was successful, such as checking for a success message or verifying the submitted data.
-    }); 
-    test("TC02-Email invalid email", async () => {
-              const fullName: string = "John Doe";
-        const email: string = "john.doeexample.com";
-        const currentAddress: string = "123 Main St";
-        const permanentAddress: string = "456 Oak Ave";
-        await textBoxPage.inputData(fullName, email, currentAddress, permanentAddress);
-        const actualEmail: string = await textBoxPage.getAtributeName(textBoxPage.txtEmail, 'class');
-        await expect(actualEmail).toContain("field-error"); // Assuming the input field gets a class "field-error" for invalid email
+//TC02: Verify that the user cannot submit the form with an invalid email format (without "@")  
+test('Email format is wrong (without "@")', async () => {
+  const fullName: string = 'Thu Hà';
+  const email: string = 'thuhagamil.com';
+  const currentAddress: string = '123 Main St';
+  const permanentAddress: string = '456 Elm St';
+    await textBoxPage.inputData(fullName, email, currentAddress, permanentAddress);
+    const classAttribute: string = await textBoxPage.getAttributeByLocator(textBoxPage.txtEmail, "class");
+    await expect(classAttribute).toContain('field-error'); // Red color indicates error
+  });
 
-    });
+//TC03: Verify that the user cannot submit the form with an invalid email format (without domain name)
+test('Email format is wrong (without domain name)', async () => {
+  const fullName: string = 'Thu Hà';
+  const email: string = 'thuha@';
+  const currentAddress: string = '123 Main St';
+  const permanentAddress: string = '456 Elm St';
+    await textBoxPage.inputData(fullName, email, currentAddress, permanentAddress);
+    const classAttribute: string = await textBoxPage.getAttributeByLocator(textBoxPage.txtEmail, "class");
+    await expect(classAttribute).toContain('field-error'); // Red color indicates error
+  });
+
+
 });
+

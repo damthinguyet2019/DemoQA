@@ -1,2 +1,1 @@
-# DemoAuto
-DemoAuto Play wright 
+# DemoQA
