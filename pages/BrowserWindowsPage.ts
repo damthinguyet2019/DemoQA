@@ -27,16 +27,7 @@ export class BrowserWindowsPage {
     
     return newPage;
    } 
-   
- async clickNewWindowButton() : Promise<Page> {
-    const [newWindowPage] = await Promise.all([
-        this.page.context().waitForEvent("page"),
-        this.btnNewWindow.click(),
-    ]);
-    await newWindowPage.waitForLoadState();
-    return newWindowPage;
-   } 
-  
+
 
    async clickNewWindowMessageButton() : Promise<Page> {
     const [newWindowMessagePage] = await Promise.all([
