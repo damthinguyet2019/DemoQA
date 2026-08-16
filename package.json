@@ -1,21 +1,16 @@
 {
   "name": "demoqa",
   "version": "1.0.0",
-  "description": "DemoAuto Play wright",
+  "description": "",
+  "type": "module",
   "main": "index.js",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/damthinguyet2019/DemoQA.git"
+  "scripts": {
+    "test": "npx playwright test",
+    "test:single": "npx playwright test tests/TextBoxTest.spec.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/damthinguyet2019/DemoQA/issues"
-  },
-  "homepage": "https://github.com/damthinguyet2019/DemoQA#readme",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/node": "^25.9.1",

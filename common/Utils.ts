@@ -14,3 +14,16 @@ export function readDataFromCSV(filePath: string): Record<string, string>[] {
     trim: true, // Xóa khoảng trắng đầu/cuối
   });
 }
+  const parsedRows = parse(content, {
+    columns: true, // Dòng đầu tiên là header
+    skip_empty_lines: true, // Bỏ qua dòng trống
+    trim: true, // Xóa khoảng trắng đầu/cuối
+  }) as Array<Record<string, string | undefined>>;
+
+  return parsedRows.map(
+    (row) =>
+      Object.fromEntries(
+        Object.entries(row).map(([key, value]) => [key, value ?? ""]),
+      ) as Record<string, string>,
+  );
+}
