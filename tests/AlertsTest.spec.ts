@@ -1,14 +1,43 @@
-import { test } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 
-test.describe("Alerts Test", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/alerts");
-  });
+export class TestBase {
+  constructor(public readonly page: Page) {}
 
-  test("Click Alert Button", async ({ page }) => {
-    await page.locator("#alertButton").click();
-    const alert = await page.waitForEvent("dialog");
-    console.log(alert.message());
-    await alert.accept();
-  });
-});
+  async goTo(url: string) {
+    await this.page.goto(url);
+  }
+
+  async clickAcceptInAlert(alertMessage: string): Promise<string> {
+    this.page.on("dialog", async (dialog) => {
+      if (dialog.message() === alertMessage) {
+        await dialog.accept();
+      }
+    });
+
+    return this.page.url();
+  }
+
+  async clickDismissInAlert(alertMessage: string): Promise<string> {
+    this.page.on("dialog", async (dialog) => {
+      if (dialog.message() === alertMessage) {
+        await dialog.dismiss();
+      }
+    });
+
+    return this.page.url();
+  }
+
+  async clickDismissWithTimer(
+    alertMessage: string,
+    waitTime: number
+  ): Promise<string> {
+    this.page.on("dialog", async (dialog) => {
+      if (dialog.message() === alertMessage) {
+        await this.page.waitForTimeout(waitTime);
+        await dialog.dismiss();
+      }
+    });
+
+    return this.page.url();
+  }
+}
