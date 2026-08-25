@@ -12,30 +12,27 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests', // Specify the test directory.
+  testDir: './tests',
   /* Run tests in files in parallel */
-  fullyParallel: false,
+  fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Keep worker count low to avoid browser context shutdown on this machine. */
-  workers: 1,
+  /* Opt out of parallel tests on CI. */
+  ...(process.env.CI ? { workers: 1 } : {}),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ['html', { outputFolder: 'reports/html-report' }],
-    ['allure-playwright', { outputFolder: 'reports/allure-results' }],
-  ],
-  
+  reporter: [['html',{ outputFolder: 'reports/html-report' }],
+['allure-playwright', { outputFolder: 'reports/allure-results' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-     baseURL: 'https://demoqa.com',
+    baseURL: 'https://demoqa.com',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    //video: 'retain-on-failure',
+    // video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */

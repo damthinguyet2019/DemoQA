@@ -1,2 +1,1 @@
 # DemoQA
-DemoQA Play wright 
